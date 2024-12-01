@@ -1,14 +1,15 @@
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.logging.Logger;
 import java.util.stream.Stream;
 import util.FilesUtil;
 
 String INPUT_FILE_PATH = "2024/src/main/resource/HistorianHysteria.txt";
-private static final Logger LOGGER = Logger.getLogger("HistorianHysteriaPart1");
+private static final Logger LOGGER = Logger.getLogger("HistorianHysteriaPart2");
 
 void main() {
-  List<Integer> distance = new ArrayList<>();
+  long similarityScore = 0;
 
   List<Integer>[] lists = getLists();
   List<Integer> listLeft = lists[0];
@@ -22,15 +23,13 @@ void main() {
     LOGGER.info(listRight.toString());
 
     for (int i = 0; i < listLeft.size(); i++) {
-      distance.add(
-          Math.abs(
-              listLeft.get(i) - listRight.get(i)
-          ));
+      int index = i;
+      long occurrences = listRight.stream().filter(number -> number.equals(listLeft.get(index))).count();
+      similarityScore += listLeft.get(i) * occurrences;
     }
   }
 
-  int totalDistance = distance.stream().reduce(0, Integer::sum);
-  LOGGER.info(String.valueOf(totalDistance));
+  LOGGER.info("Similarity: " + similarityScore);
 }
 
 List<Integer>[] getLists() {
