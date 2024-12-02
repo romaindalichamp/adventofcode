@@ -1,5 +1,7 @@
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.logging.Logger;
 import java.util.stream.Stream;
@@ -10,6 +12,7 @@ private static final Logger LOGGER = Logger.getLogger("HistorianHysteriaPart2");
 
 void main() {
   long similarityScore = 0;
+  Map<Integer, Integer> rightListDuplicates = new HashMap<>();
 
   List<Integer>[] lists = getLists();
   List<Integer> listLeft = lists[0];
@@ -22,10 +25,14 @@ void main() {
     LOGGER.info(listLeft.toString());
     LOGGER.info(listRight.toString());
 
-    for (int i = 0; i < listLeft.size(); i++) {
-      int index = i;
-      long occurrences = listRight.stream().filter(number -> number.equals(listLeft.get(index))).count();
-      similarityScore += listLeft.get(i) * occurrences;
+    for (Integer integer : listRight) {
+      rightListDuplicates.put(integer, (Objects.isNull(rightListDuplicates.get(integer))? 1 : rightListDuplicates.get(integer) + 1));
+    }
+
+    LOGGER.info(rightListDuplicates.toString());
+
+    for (Integer integer : listLeft) {
+      similarityScore += Objects.isNull(rightListDuplicates.get(integer))? 0 : (long) integer * rightListDuplicates.get(integer);
     }
   }
 
